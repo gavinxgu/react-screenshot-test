@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "outDir": "dist",
+    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "strict": true,
+    "jsx": "react",
+    "skipLibCheck": true,
+    "declaration": true
+  },
+  "exclude": ["src/__tests__"],
+  "include": ["src"]
+}
