@@ -6,7 +6,6 @@
   "license": "MIT",
   "files": [
     "dist",
-    "public",
     "css-transform"
   ],
   "scripts": {
@@ -14,7 +13,9 @@
     "start:screenshot:server:local": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node-script' src/bin/start-local-server.ts",
     "start:screenshot:server:docker": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node-script' src/bin/start-docker-server.ts",
     "build": "tsc --noEmit false",
-    "serve:screenshot:server:local": "node dist/bin/start-local-server.js"
+    "test": "jest",
+    "serve:screenshot:server:local": "node dist/bin/start-local-server.js",
+    "prepare": "yarn build"
   },
   "dependencies": {
     "@babel/core": "^7.12.13",
@@ -28,7 +29,7 @@
     "dockerode": "^3.2.1",
     "express": "^4.17.1",
     "get-port": "^5.1.1",
-    "html-webpack-plugin": "^4.5.1",
+    "html-webpack-plugin": "^5.0.0",
     "tmp": "^0.2.1",
     "webpack": "^5.20.0",
     "webpack-dev-server": "^3.11.2",

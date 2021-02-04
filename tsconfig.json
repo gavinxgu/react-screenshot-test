@@ -8,7 +8,8 @@
     "strict": true,
     "jsx": "react",
     "skipLibCheck": true,
-    "declaration": true
+    "declaration": true,
+    "resolveJsonModule": true
   },
   "exclude": ["src/__tests__"],
   "include": ["src"]

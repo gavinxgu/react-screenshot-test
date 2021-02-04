@@ -1,4 +1,5 @@
 import path from "path";
+import express from "express";
 import { Server } from "http";
 import { promisify } from "util";
 import webpack from "webpack";
@@ -9,14 +10,65 @@ import { DEFAULT_EXTENSIONS } from "@babel/core";
 import { readRecordedCss } from "./recorded-css";
 import { isEnvDevelopment, isEnvProduction, isEnvTest } from "./const";
 import { logger } from "./logger";
+import { ReactElement } from "react";
+import { renderToString } from "react-dom/server";
 
-export async function createWebpackComponentServer({
-  port,
-  componentFilePath,
-}: {
-  port: number;
-  componentFilePath: string;
-}) {
+export async function createSSRComponentServer(
+  port: number,
+  {
+    ui,
+  }: {
+    ui: ReactElement;
+  }
+) {
+  const app = express();
+  app.get("/", (_, res) => {
+    try {
+      res.send(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="UTF-8" />
+        <title>React Screenshot Test</title>
+        <style type="text/css">${readRecordedCss()}</style>
+      </head>
+      <body>
+        ${renderToString(ui)}
+      </body>
+    </html>
+        `);
+    } catch (err) {
+      res.status(400);
+      res.send({
+        message: err.message,
+      });
+    }
+  });
+
+  function appStart() {
+    return new Promise<Server>((resolve, reject) => {
+      const server = app.listen(port, "127.0.0.1", () => {
+        resolve(server);
+      });
+    });
+  }
+
+  const server = await appStart();
+
+  return async () => {
+    const closeServer = promisify(server.close.bind(server));
+    await closeServer();
+  };
+}
+
+export async function createWebpackComponentServer(
+  port: number,
+  {
+    componentFilePath,
+  }: {
+    componentFilePath: string;
+  }
+) {
   const { dir, name } = path.parse(componentFilePath);
   const entryFile = path.format({
     dir,
@@ -118,6 +170,8 @@ render(<Component />, document.getElementById('root'))
     open: false,
     clientLogLevel: "none",
     stats: "errors-only",
+    liveReload: false,
+    noInfo: true,
   });
 
   function appStart() {
@@ -137,12 +191,10 @@ render(<Component />, document.getElementById('root'))
   logger.timeEnd("appStart");
 
   const cleanup = async () => {
-    const compilerClose = promisify(compiler.close.bind(compiler));
-    const appClose = promisify(app.close.bind(app));
-    logger.time("compilerClose");
-    await compilerClose();
-    logger.timeEnd("compilerClose");
-    await appClose();
+    const closeCompiler = promisify(compiler.close.bind(compiler));
+    const closeApp = promisify(app.close.bind(app));
+    await closeCompiler();
+    await closeApp();
   };
 
   return cleanup;

@@ -10,7 +10,11 @@ export default () => {
   return (
     <div>
       <button>{s}</button>
-      <div>{navigator.userAgent}</div>
+      <div>
+        {typeof navigator !== "undefined"
+          ? navigator.userAgent
+          : "ssr has no navigator"}
+      </div>
     </div>
   );
 };

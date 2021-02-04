@@ -3,11 +3,11 @@ import bodyParser from "body-parser";
 import playwright, { Page } from "playwright";
 import Docker from "dockerode";
 import {
-  BrowserEnumType,
   PageCreateBody,
   PageScreenshotBody,
 } from "./interface";
 import { logger } from "./logger";
+import pkg from "../package.json"
 
 export async function createScreenshotServer({ port }: { port: number }) {
   // 自增 ID
@@ -148,8 +148,8 @@ export async function createScreenshotServer({ port }: { port: number }) {
 }
 
 export async function createDockerScreenshotServer({ port }: { port: number }) {
-  const DOCKER_IMAGE_TAG_NAME = "react-screenshot-test";
-  const DOCKER_IMAGE_VERSION = "latest";
+  const DOCKER_IMAGE_TAG_NAME = "gavinxgu/react-screenshot-test";
+  const DOCKER_IMAGE_VERSION = pkg.version;
   const DOCKER_IMAGE_TAG = `${DOCKER_IMAGE_TAG_NAME}:${DOCKER_IMAGE_VERSION}`;
   const DOCKER_INTERNAL_PORT = 3001;
 
