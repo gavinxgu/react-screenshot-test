@@ -1,4 +1,4 @@
-import { createDockerScreenshotServer } from "../screenshot-server";
+import { createDockerScreenshotServer } from "../screenshot-server-docker";
 
 createDockerScreenshotServer({ port: 3001 }).then((cleanup) => {
   setInterval(function () {

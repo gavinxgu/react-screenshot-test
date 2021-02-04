@@ -1,4 +1,4 @@
-import { createDockerScreenshotServer } from "./screenshot-server";
+import { createDockerScreenshotServer } from "./screenshot-server-docker";
 
 export let cleanup: (() => Promise<void>) | null = null;
 
