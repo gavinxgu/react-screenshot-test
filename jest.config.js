@@ -2,6 +2,8 @@ module.exports = {
   setupFiles: [],
   preset: "ts-jest/presets/js-with-ts",
   testEnvironment: "node",
+  globalSetup: "./dist/global-setup",
+  globalTeardown: "./dist/global-teardown",
   transformIgnorePatterns: ["\\.pnp\\.[^\\/]+$", "/node_modules/(?!rc-util)"],
   collectCoverage: true,
   coveragePathIgnorePatterns: ["/node_modules/"],
@@ -9,6 +11,6 @@ module.exports = {
     "^.+\\.css$": "./css-transform",
   },
   moduleNameMapper: {
-    "^@gavinxgu/react-screenshot-test$": "<rootDir>/src/index.ts",
+    "^@gux/react-screenshot-test$": "<rootDir>/src/index.ts",
   },
 };

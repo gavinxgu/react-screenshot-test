@@ -1,5 +1,5 @@
 {
-  "name": "@gavinxgu/react-screenshot-test",
+  "name": "@gux/react-screenshot-test",
   "version": "0.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

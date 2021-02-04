@@ -25,7 +25,7 @@ module.exports = {
 
   process: (src, filename) => {
     return `
-        const { recordCss } = require("@gavinxgu/react-screenshot-test");
+        const { recordCss } = require("@gux/react-screenshot-test");
         recordCss(${JSON.stringify(src)});
         module.exports = {};
       `;

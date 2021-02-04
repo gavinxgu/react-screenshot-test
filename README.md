@@ -1,4 +1,4 @@
-# @gavinxgu/react-screenshot-test
+# @gux/react-screenshot-test
 
 To Solve 2 Problem
 
@@ -8,7 +8,7 @@ To Solve 2 Problem
 ## How to use
 
 ```tsx
-import { render } from '@gavinxgu/react-screenshot-test'
+import { render } from '@gux/react-screenshot-test'
 
 describe('Screenshot test', () => {
   it('should render correctly', () => {
