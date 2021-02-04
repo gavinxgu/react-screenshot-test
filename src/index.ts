@@ -23,7 +23,7 @@ class Render<T> {
     const client = createScreehotClient({ port: 3001 });
     return {
       createPage: async (
-        pageOpt: Pick<PageCreateBody, "browser" | "viewport"> = {
+        pageOpt: Omit<PageCreateBody, "url"> = {
           browser: "chromium",
         }
       ) => {
@@ -34,8 +34,7 @@ class Render<T> {
           url: `http://${
             process.platform !== "linux" ? "host.docker.internal" : "localhost"
           }:${port}`,
-          browser: pageOpt.browser,
-          viewport: pageOpt.viewport,
+          ...pageOpt,
         });
         logger.timeEnd("client.createPage");
         return {

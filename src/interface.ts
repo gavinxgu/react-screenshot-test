@@ -11,5 +11,6 @@ export interface PageScreenshotBody {
 export interface PageCreateBody {
   url: string;
   viewport?: { width: number; height: number };
+  deviceScaleFactor?: number;
   browser: BrowserEnumType;
 }

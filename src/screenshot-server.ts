@@ -44,13 +44,14 @@ export async function createScreenshotServer({ port }: { port: number }) {
         url,
         viewport,
         browser: browserProp,
+        deviceScaleFactor,
       } = req.body as PageCreateBody;
       const browser = browserMap[browserProp];
       if (!browser) {
         throw new Error(`${browserProp} is not ready`);
       }
       logger.time("browser.newContext");
-      const context = await browser.newContext({ viewport });
+      const context = await browser.newContext({ viewport, deviceScaleFactor });
       logger.timeEnd("browser.newContext");
       logger.time("context.newPage");
       const page = await context.newPage();
