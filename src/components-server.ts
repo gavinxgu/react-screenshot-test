@@ -141,6 +141,7 @@ render(<Component />, document.getElementById('root'))
                 ],
                 [require("@babel/preset-typescript").default],
               ],
+              plugins: [require("@babel/plugin-proposal-class-properties")],
             },
           },
         },

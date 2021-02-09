@@ -48,3 +48,18 @@ describe("ssr render", () => {
     await cleanup();
   });
 });
+
+describe("class-component webpack render", () => {
+  test("should render button", async () => {
+    const { createPage, cleanup } = await webpackRender.render({
+      componentFilePath: path.resolve(
+        __dirname,
+        "../../examples/class-component.tsx"
+      ),
+    });
+    let page = await createPage({ browser: "chromium" });
+    expect(await page.screenshot()).toMatchImageSnapshot();
+    await page.close();
+    await cleanup();
+  });
+});
