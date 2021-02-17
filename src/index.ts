@@ -3,6 +3,7 @@ import { createScreehotClient } from "./screenshot-client";
 import {
   createSSRComponentServer,
   createWebpackComponentServer,
+  createViteComponentServer
 } from "./components-server";
 import { PageCreateBody, PageScreenshotBody } from "./interface";
 import { logger } from "./logger";
@@ -19,7 +20,7 @@ class Render<T> {
 
   async render(props: T) {
     const port = await getPort();
-    const cleanupWebpackServer = await this.createServer(port, props);
+    const cleanupServer = await this.createServer(port, props);
     const client = createScreehotClient({ port: 3001 });
     return {
       createPage: async (
@@ -51,7 +52,7 @@ class Render<T> {
       },
       cleanup: async () => {
         logger.time("cleanup");
-        await cleanupWebpackServer();
+        await cleanupServer();
         logger.timeEnd("cleanup");
       },
     };
@@ -60,3 +61,4 @@ class Render<T> {
 
 export const webpackRender = new Render(createWebpackComponentServer);
 export const ssrRender = new Render(createSSRComponentServer);
+export const viteRender = new Render(createViteComponentServer);

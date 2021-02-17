@@ -6,10 +6,11 @@
   "license": "MIT",
   "files": [
     "dist",
-    "css-transform"
+    "css-transform",
+    "public"
   ],
   "scripts": {
-    "start:components:server": "ts-node-script src/components-server.ts",
+    "start:vite:component:server": "ts-node-script src/bin/start-vite-comp-server.ts",
     "start:screenshot:server:local": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node-script' src/bin/start-local-server.ts",
     "start:screenshot:server:docker": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node-script' src/bin/start-docker-server.ts",
     "build": "tsc --noEmit false",
@@ -32,6 +33,7 @@
     "get-port": "^5.1.1",
     "html-webpack-plugin": "^5.0.0",
     "tmp": "^0.2.1",
+    "vite": "^2.0.0",
     "webpack": "^5.20.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-virtual-modules": "^0.4.2"
