@@ -58,7 +58,9 @@ export async function createScreenshotServer({ port }: { port: number }) {
       logger.timeEnd("context.newPage");
       pageMap.set(currentID, page);
       logger.time("page.goto");
-      await page.goto(url);
+      await page.goto(url, {
+        waitUntil: "networkidle",
+      });
       logger.timeEnd("page.goto");
       res.send({
         id: currentID,
