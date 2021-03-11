@@ -6,3 +6,4 @@ release:
 	git diff-index --quiet HEAD
 	git fetch --all --tags
 	npm publish --access public
+	bash docker-build.sh
