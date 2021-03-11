@@ -5,4 +5,4 @@ test_debug:
 release:
 	git diff-index --quiet HEAD
 	git fetch --all --tags
-	yarn publish
+	npm publish --access public
