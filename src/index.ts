@@ -33,6 +33,8 @@ class Render<T> {
       createPage: async ({
         path = "",
         browser = "chromium",
+        viewport,
+        deviceScaleFactor,
       }: Partial<Omit<PageCreateBody, "url">> & { path?: string } = {}) => {
         logger.time("client.createPage");
         const {
@@ -40,6 +42,8 @@ class Render<T> {
         } = await client.createPage({
           url: `${host}:${port}#/${path.replace(/^\//, "")}`,
           browser,
+          viewport,
+          deviceScaleFactor,
         });
         logger.timeEnd("client.createPage");
         return {
