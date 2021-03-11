@@ -3,12 +3,18 @@ import { createScreehotClient } from "./screenshot-client";
 import {
   createSSRComponentServer,
   createWebpackComponentServer,
-  createViteComponentServer
+  createViteComponentServer,
 } from "./components-server";
-import { PageCreateBody, PageScreenshotBody } from "./interface";
+import { PageCreateBody, PageGotoBody, PageScreenshotBody } from "./interface";
 import { logger } from "./logger";
 
 export { recordCss } from "./recorded-css";
+
+function getHostname() {
+  return `http://${
+    process.platform !== "linux" ? "host.docker.internal" : "localhost"
+  }`;
+}
 
 class Render<T> {
   constructor(
@@ -22,20 +28,18 @@ class Render<T> {
     const port = await getPort();
     const cleanupServer = await this.createServer(port, props);
     const client = createScreehotClient({ port: 3001 });
+    const host = getHostname();
     return {
-      createPage: async (
-        pageOpt: Omit<PageCreateBody, "url"> = {
-          browser: "chromium",
-        }
-      ) => {
+      createPage: async ({
+        path = "",
+        browser = "chromium",
+      }: Partial<Omit<PageCreateBody, "url">> & { path?: string } = {}) => {
         logger.time("client.createPage");
         const {
           data: { id },
         } = await client.createPage({
-          url: `http://${
-            process.platform !== "linux" ? "host.docker.internal" : "localhost"
-          }:${port}`,
-          ...pageOpt,
+          url: `${host}:${port}#/${path.replace(/^\//, "")}`,
+          browser,
         });
         logger.timeEnd("client.createPage");
         return {
@@ -46,6 +50,13 @@ class Render<T> {
             );
             logger.timeEnd("client.screenshot");
             return res;
+          },
+          goto: async (payload: { path: string }) => {
+            logger.time(`client.goto ${payload.path}`);
+            await client.goto(id, {
+              url: `${host}:${port}#/${payload.path.replace(/^\//, "")}`,
+            });
+            logger.timeEnd(`client.goto ${payload.path}`);
           },
           close: async () => client.closePage(id),
         };

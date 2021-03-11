@@ -8,7 +8,7 @@ import HtmlWebpackPlugin from "html-webpack-plugin";
 import VirtualModulesPlugin from "webpack-virtual-modules";
 import { DEFAULT_EXTENSIONS } from "@babel/core";
 import { createServer, Plugin } from "vite";
-import { readRecordedCss, recordCss } from "./recorded-css";
+import { readRecordedCss } from "./recorded-css";
 import { isEnvDevelopment, isEnvProduction, isEnvTest } from "./const";
 import { logger } from "./logger";
 import { ReactElement } from "react";
@@ -207,11 +207,19 @@ export async function createViteComponentServer(
   {
     componentFilePath,
   }: {
-    componentFilePath: string;
+    componentFilePath: string[];
   }
 ) {
-  const { dir, name } = path.parse(componentFilePath);
-  const entryFile = `/src/${name}.virtual.tsx`;
+  const components = componentFilePath.map((filePath, index) => {
+    const { dir, name } = path.parse(filePath);
+    return {
+      dir,
+      name,
+      import: `import Component${index} from '${path.join(dir, name)}';`,
+      jsx: `<Route path="${filePath}"><Component${index} /></Route>`,
+    };
+  });
+  const entryFile = `/src/entry.virtual.tsx`;
   const virtualFilePlugin = ({
     fileId,
     content,
@@ -271,9 +279,18 @@ export async function createViteComponentServer(
         content: `
 import React from 'react'
 import { render } from 'react-dom'
-import Component from '${path.join(dir, name)}'
+import {
+  HashRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+${components.map((o) => o.import).join("\n")}
 
-render(<Component />, document.getElementById('root'))`,
+render(<Router>
+  <Switch>
+  ${components.map((o) => o.jsx).join("\n")}
+  </Switch>
+</Router>, document.getElementById('root'))`,
       }),
     ],
     server: {

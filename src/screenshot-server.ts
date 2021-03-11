@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import playwright, { Page } from "playwright";
-import { PageCreateBody, PageScreenshotBody } from "./interface";
+import { PageCreateBody, PageGotoBody, PageScreenshotBody } from "./interface";
 import { logger } from "./logger";
 
 export async function createScreenshotServer({ port }: { port: number }) {
@@ -93,6 +93,26 @@ export async function createScreenshotServer({ port }: { port: number }) {
         throw new Error(`page ${id} is not found`);
       }
       res.send(await page.screenshot({ fullPage, quality, timeout, type }));
+    } catch (err) {
+      res.status(400);
+      res.send({
+        message: err.message,
+      });
+    }
+  });
+
+  app.post("/page/:id/_goto", async (req, res) => {
+    try {
+      const id = req.params.id;
+      const { url } = req.body as PageGotoBody;
+      const page = pageMap.get(Number(id));
+      if (!page) {
+        throw new Error(`page ${id} is not found`);
+      }
+      await page.goto(url, {
+        waitUntil: "networkidle",
+      });
+      res.end();
     } catch (err) {
       res.status(400);
       res.send({

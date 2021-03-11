@@ -51,20 +51,41 @@ describe("ssr render", () => {
 
 describe("vite render", () => {
   test("should render button", async () => {
+    const paths = [path.resolve(__dirname, "../../examples/button.tsx")];
+
     const { createPage, cleanup } = await viteRender.render({
-      componentFilePath: path.resolve(__dirname, "../../examples/button.tsx"),
+      componentFilePath: paths,
     });
-    let page = await createPage({ browser: "chromium" });
+
+    let page = await createPage({ browser: "chromium", path: paths[0] });
     expect(await page.screenshot()).toMatchImageSnapshot();
     page.close();
 
-    page = await createPage({ browser: "firefox" });
+    page = await createPage({ browser: "firefox", path: paths[0] });
     expect(await page.screenshot()).toMatchImageSnapshot();
     page.close();
 
-    page = await createPage({ browser: "webkit" });
+    page = await createPage({ browser: "webkit", path: paths[0] });
     expect(await page.screenshot()).toMatchImageSnapshot();
     await page.close();
+    await cleanup();
+  });
+
+  test("should render two components", async () => {
+    const paths = [
+      path.resolve(__dirname, "../../examples/button.tsx"),
+      path.resolve(__dirname, "../../examples/box.tsx"),
+    ];
+
+    const { createPage, cleanup } = await viteRender.render({
+      componentFilePath: paths,
+    });
+
+    let page = await createPage({ browser: "chromium", path: paths[0] });
+    expect(await page.screenshot()).toMatchImageSnapshot();
+    await page.goto({ path: paths[1] });
+    expect(await page.screenshot()).toMatchImageSnapshot();
+    page.close();
     await cleanup();
   });
 });

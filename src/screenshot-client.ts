@@ -1,5 +1,5 @@
 import axios from "axios";
-import { PageCreateBody, PageScreenshotBody } from "./interface";
+import { PageCreateBody, PageGotoBody, PageScreenshotBody } from "./interface";
 
 export function createScreehotClient({ port }: { port: number }) {
   const serverHost = `http://localhost:${port}`;
@@ -10,6 +10,8 @@ export function createScreehotClient({ port }: { port: number }) {
       axios.post<ArrayBuffer>(`${serverHost}/page/${id}/_screenshot`, payload, {
         responseType: "arraybuffer",
       }),
+    goto: (id: number, payload: PageGotoBody) =>
+      axios.post<ArrayBuffer>(`${serverHost}/page/${id}/_goto`, payload),
     closePage: (id: number) => axios.delete(`${serverHost}/page/${id}`),
   };
 }

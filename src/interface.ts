@@ -14,3 +14,7 @@ export interface PageCreateBody {
   deviceScaleFactor?: number;
   browser: BrowserEnumType;
 }
+
+export interface PageGotoBody {
+  url: string;
+}
