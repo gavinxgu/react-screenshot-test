@@ -1,14 +1,14 @@
 /**
  * A concatenated string of all CSS stylesheets imported directly or indirectly from the test.
  *
- * Transitions and animations are always disabled.
  */
-let recordedCss = `
-* {
-  transition: none !important;
-  animation: none !important;
-}
-`;
+// let recordedCss = `
+// * {
+//   transition: none !important;
+//   animation: none !important;
+// }
+// `;
+let recordedCss = "";
 
 /**
  * Record an imported CSS stylesheet.
