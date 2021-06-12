@@ -17,34 +17,39 @@ import { renderToString } from "react-dom/server";
 export async function createSSRComponentServer(
   port: number,
   {
-    ui,
+    uis,
   }: {
-    ui: ReactElement;
+    uis: {
+      path: string;
+      ui: ReactElement;
+    }[];
   }
 ) {
   const app = express();
-  app.get("/", (_, res) => {
-    try {
-      res.send(`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="UTF-8" />
-        <title>React Screenshot Test</title>
-        <style type="text/css">${readRecordedCss()}</style>
-      </head>
-      <body>
-        ${renderToString(ui)}
-      </body>
-    </html>
-        `);
-    } catch (err) {
-      res.status(400);
-      res.send({
-        message: err.message,
-      });
-    }
-  });
+  for (const ui of uis) {
+    app.get(ui.path, (_, res) => {
+      try {
+        res.send(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8" />
+          <title>React Screenshot Test</title>
+          <style type="text/css">${readRecordedCss()}</style>
+        </head>
+        <body>
+          ${renderToString(ui.ui)}
+        </body>
+      </html>
+          `);
+      } catch (err) {
+        res.status(400);
+        res.send({
+          message: err.message,
+        });
+      }
+    });
+  }
 
   function appStart() {
     return new Promise<Server>((resolve, reject) => {
@@ -206,8 +211,10 @@ export async function createViteComponentServer(
   port: number,
   {
     componentFilePath,
+    define,
   }: {
     componentFilePath: string[];
+    define?: Record<string, any>;
   }
 ) {
   const components = componentFilePath.map((filePath, index) => {
@@ -296,6 +303,7 @@ render(<Router>
     server: {
       port,
     },
+    define,
   });
   await server.listen();
 

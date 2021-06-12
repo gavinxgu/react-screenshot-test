@@ -32,7 +32,12 @@ describe("webpack render", () => {
 describe("ssr render", () => {
   test("should render button", async () => {
     const { createPage, cleanup } = await ssrRender.render({
-      ui: <Button />,
+      uis: [
+        {
+          path: "/",
+          ui: <Button />,
+        },
+      ],
     });
     let page = await createPage({ browser: "chromium" });
     expect(await page.screenshot()).toMatchImageSnapshot();
