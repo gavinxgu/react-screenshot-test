@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/playwright:bionic
+FROM mcr.microsoft.com/playwright:v1.12.3-bionic
 RUN apt-get -qqy update && \
   apt-get -qqy --no-install-recommends install \
   fonts-roboto \
