@@ -7,7 +7,7 @@ import WebpackDevServer from "webpack-dev-server";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import VirtualModulesPlugin from "webpack-virtual-modules";
 import { DEFAULT_EXTENSIONS } from "@babel/core";
-import { createServer, Plugin } from "vite";
+import { createServer, InlineConfig, Plugin } from "vite";
 import { readRecordedCss } from "./recorded-css";
 import { isEnvDevelopment, isEnvProduction, isEnvTest } from "./const";
 import { logger } from "./logger";
@@ -211,11 +211,10 @@ export async function createViteComponentServer(
   port: number,
   {
     componentFilePath,
-    define,
+    ...inlineConfig
   }: {
     componentFilePath: string[];
-    define?: Record<string, any>;
-  }
+  } & InlineConfig
 ) {
   const components = componentFilePath.map((filePath, index) => {
     const { dir, name } = path.parse(filePath);
@@ -274,6 +273,7 @@ export async function createViteComponentServer(
   // console.log(entryFile, path.join(dir, name));
 
   const server = await createServer({
+    ...inlineConfig,
     configFile: false,
     clearScreen: false,
     root: path.resolve(__dirname, "../public"),
@@ -299,11 +299,16 @@ render(<Router>
   </Switch>
 </Router>, document.getElementById('root'))`,
       }),
+      ...(Array.isArray(inlineConfig.plugins)
+        ? inlineConfig.plugins
+        : inlineConfig.plugins
+        ? [inlineConfig.plugins]
+        : []),
     ],
     server: {
+      ...inlineConfig.server,
       port,
     },
-    define,
   });
   await server.listen();
 
