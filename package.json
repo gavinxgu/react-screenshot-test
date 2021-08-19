@@ -1,6 +1,6 @@
 {
   "name": "@gux/react-screenshot-test",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "license": "MIT",
@@ -33,6 +33,7 @@
     "express": "^4.17.1",
     "get-port": "^5.1.1",
     "html-webpack-plugin": "^5.0.0",
+    "playwright": "^1.14.0",
     "react-router-dom": "^5.2.0",
     "tmp": "^0.2.1",
     "vite": "^2.1.5",
@@ -51,7 +52,6 @@
     "jest": "^26.6.3",
     "jest-image-snapshot": "^4.3.0",
     "nodemon": "^2.0.7",
-    "playwright": "^1.12.3",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "ts-jest": "^26.5.0",
