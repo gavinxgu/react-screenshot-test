@@ -7,10 +7,14 @@ import {
 } from "./components-server";
 import { PageCreateBody, PageGotoBody, PageScreenshotBody } from "./interface";
 import { logger } from "./logger";
+import { serverType } from "./const";
 
 export { recordCss } from "./recorded-css";
 
 function getHostname() {
+  if (serverType === 'local') {
+    return 'http://localhost'
+  }
   return `http://${
     process.platform !== "linux" ? "host.docker.internal" : "localhost"
   }`;
