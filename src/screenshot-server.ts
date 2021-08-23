@@ -108,6 +108,8 @@ export async function createScreenshotServer({ port }: { port: number }) {
       await page.goto(url, {
         waitUntil: "networkidle",
       });
+      // 添加样式，隐藏光标
+      await page.addStyleTag({content: '* {caret-color: transparent !important;}'})
       res.end();
     } catch (err) {
       res.status(400);
