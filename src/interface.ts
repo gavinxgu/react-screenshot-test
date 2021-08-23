@@ -13,6 +13,7 @@ export interface PageCreateBody {
   viewport?: { width: number; height: number };
   deviceScaleFactor?: number;
   browser: BrowserEnumType;
+  spaHashRouter?: boolean;
 }
 
 export interface PageGotoBody {

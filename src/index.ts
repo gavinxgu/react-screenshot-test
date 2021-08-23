@@ -12,8 +12,8 @@ import { serverType } from "./const";
 export { recordCss } from "./recorded-css";
 
 function getHostname() {
-  if (serverType === 'local') {
-    return 'http://localhost'
+  if (serverType === "local") {
+    return "http://localhost";
   }
   return `http://${
     process.platform !== "linux" ? "host.docker.internal" : "localhost"
@@ -33,18 +33,23 @@ class Render<T> {
     const cleanupServer = await this.createServer(port, props);
     const client = createScreehotClient({ port: 3001 });
     const host = getHostname();
+    const getUrl = (path = "", spaHashRouter = true) => {
+      const hash = spaHashRouter ? "#" : "";
+      return `${host}:${port}${hash}/${encodeURIComponent(path)}`;
+    };
     return {
       createPage: async ({
         path = "",
         browser = "chromium",
         viewport,
         deviceScaleFactor,
+        spaHashRouter = true,
       }: Partial<Omit<PageCreateBody, "url">> & { path?: string } = {}) => {
         logger.time("client.createPage");
         const {
           data: { id },
         } = await client.createPage({
-          url: `${host}:${port}#/${path.replace(/^\//, "")}`,
+          url: getUrl(path, spaHashRouter),
           browser,
           viewport,
           deviceScaleFactor,
@@ -62,7 +67,7 @@ class Render<T> {
           goto: async (payload: { path: string }) => {
             logger.time(`client.goto ${payload.path}`);
             await client.goto(id, {
-              url: `${host}:${port}#/${payload.path.replace(/^\//, "")}`,
+              url: getUrl(payload.path, spaHashRouter),
             });
             logger.timeEnd(`client.goto ${payload.path}`);
           },

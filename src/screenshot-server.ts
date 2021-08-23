@@ -82,12 +82,8 @@ export async function createScreenshotServer({ port }: { port: number }) {
   app.post("/page/:id/_screenshot", async (req, res) => {
     try {
       const id = req.params.id;
-      const {
-        fullPage,
-        quality,
-        timeout,
-        type,
-      } = req.body as PageScreenshotBody;
+      const { fullPage, quality, timeout, type } =
+        req.body as PageScreenshotBody;
       const page = pageMap.get(Number(id));
       if (!page) {
         throw new Error(`page ${id} is not found`);
