@@ -27,7 +27,7 @@ export async function createSSRComponentServer(
 ) {
   const app = express();
   for (const ui of uis) {
-    app.get(ui.path, (_, res) => {
+    app.get(path.join("/", ui.path), (_, res) => {
       try {
         res.send(`
       <!DOCTYPE html>

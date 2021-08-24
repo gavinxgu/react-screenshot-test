@@ -1,4 +1,5 @@
 import getPort from "get-port";
+import path from "path";
 import { createScreehotClient } from "./screenshot-client";
 import {
   createSSRComponentServer,
@@ -33,9 +34,9 @@ class Render<T> {
     const cleanupServer = await this.createServer(port, props);
     const client = createScreehotClient({ port: 3001 });
     const host = getHostname();
-    const getUrl = (path = "", spaHashRouter = true) => {
+    const getUrl = (_path = "", spaHashRouter = true) => {
       const hash = spaHashRouter ? "#" : "";
-      return `${host}:${port}${hash}/${encodeURIComponent(path)}`;
+      return `${host}:${port}${hash}` + path.join("/", _path);
     };
     return {
       createPage: async ({
