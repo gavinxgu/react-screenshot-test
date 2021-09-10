@@ -4,6 +4,11 @@ import playwright, { Page } from "playwright";
 import { PageCreateBody, PageGotoBody, PageScreenshotBody } from "./interface";
 import { logger } from "./logger";
 
+function hideCaret(page: Page) {
+  // 添加样式，隐藏光标
+  return page.addStyleTag({content: '* {caret-color: transparent !important;}'});
+}
+
 export async function createScreenshotServer({ port }: { port: number }) {
   // 自增 ID
   let id = 0;
@@ -61,6 +66,7 @@ export async function createScreenshotServer({ port }: { port: number }) {
       await page.goto(url, {
         waitUntil: "networkidle",
       });
+      await hideCaret(page);
       logger.timeEnd("page.goto");
       res.send({
         id: currentID,
@@ -112,8 +118,7 @@ export async function createScreenshotServer({ port }: { port: number }) {
       await page.goto(url, {
         waitUntil: "networkidle",
       });
-      // 添加样式，隐藏光标
-      await page.addStyleTag({content: '* {caret-color: transparent !important;}'})
+      await hideCaret(page);
       res.end();
     } catch (err) {
       res.status(400);
